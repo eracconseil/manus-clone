@@ -40,7 +40,7 @@ class AgentResult:
     iterations: int = 0
 
 
-SYSTEM_PROMPT = """Tu es ManusClone, un agent IA autonome expert. Tu peux utiliser des outils pour accomplir des tâches complexes.
+SYSTEM_PROMPT = """Tu es Orion, un agent IA autonome expert. Tu peux utiliser des outils pour accomplir des tâches complexes.
 
 Stratégie :
 1. Analyse la demande

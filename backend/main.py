@@ -5,7 +5,7 @@ from .api.routes import router as agent_router
 from .api.billing import router as billing_router
 from .api.history import router as history_router
 
-app = FastAPI(title="ManusClone API", version="0.1.0")
+app = FastAPI(title="Orion API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,

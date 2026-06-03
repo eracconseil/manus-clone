@@ -53,7 +53,7 @@ export default function Home() {
           <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#7c6af7" }}>
             <Zap size={14} color="#fff" />
           </div>
-          <span className="font-semibold text-sm" style={{ color: "#e2e2f0" }}>ManusClone</span>
+          <span className="font-semibold text-sm" style={{ color: "#e2e2f0" }}>Orion</span>
           <span className="text-xs px-2 py-0.5 rounded-full border" style={{ color: "#6b6b8a", borderColor: "#1e1e2e" }}>
             beta
           </span>
@@ -106,7 +106,7 @@ export default function Home() {
             </div>
             <div>
               <h2 className="text-xl font-semibold mb-1" style={{ color: "#e2e2f0" }}>
-                ManusClone Agent
+                Orion Agent
               </h2>
               <p className="text-sm" style={{ color: "#6b6b8a" }}>
                 Agent IA autonome · Recherche web · Exécution code · Gestion fichiers
