@@ -9,7 +9,7 @@ import { UsageBanner } from "@/components/UsageBanner";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { Zap, LayoutDashboard } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://manus-clone-production.up.railway.app";
 
 export default function Home() {
   const { messages, isLoading, sendMessage } = useAgent();

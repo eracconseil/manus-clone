@@ -5,7 +5,7 @@ import { Zap, MessageSquare, TrendingUp, CreditCard, ArrowLeft, Crown } from "lu
 import { useProfile } from "@/lib/useProfile";
 import { UpgradeModal } from "@/components/UpgradeModal";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://manus-clone-production.up.railway.app";
 
 const PLAN_CONFIG = {
   free:     { label: "Gratuit",  color: "#8a7a6a", limit: 10 },

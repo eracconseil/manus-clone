@@ -2,7 +2,7 @@
 import { useState, useCallback, useRef } from "react";
 import type { Message, AgentEvent, ModelType } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://manus-clone-production.up.railway.app";
 
 function uid() {
   return Math.random().toString(36).slice(2);
