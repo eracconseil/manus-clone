@@ -10,9 +10,12 @@ PLAN_LIMITS = {
 
 
 async def get_profile(user_id: str) -> dict | None:
-    db = get_client()
-    res = db.table("profiles").select("*").eq("id", user_id).single().execute()
-    return res.data
+    try:
+        db = get_client()
+        res = db.table("profiles").select("*").eq("id", user_id).maybe_single().execute()
+        return res.data
+    except Exception:
+        return None
 
 
 async def check_and_increment(user_id: str) -> tuple[bool, dict]:
@@ -28,13 +31,16 @@ async def check_and_increment(user_id: str) -> tuple[bool, dict]:
 
 
 async def save_session(session_id: str, user_id: str, title: str = "") -> None:
-    db = get_client()
-    db.table("sessions").upsert({
-        "id": session_id,
-        "user_id": user_id,
-        "title": title or "Nouvelle conversation",
-        "updated_at": datetime.utcnow().isoformat(),
-    }).execute()
+    try:
+        db = get_client()
+        db.table("sessions").upsert({
+            "id": session_id,
+            "user_id": user_id,
+            "title": title or "Nouvelle conversation",
+            "updated_at": datetime.utcnow().isoformat(),
+        }).execute()
+    except Exception:
+        pass
 
 
 async def save_message(
@@ -46,16 +52,19 @@ async def save_message(
     tokens_out: int = 0,
     cost_usd: float = 0.0,
 ) -> None:
-    db = get_client()
-    db.table("messages").insert({
-        "session_id": session_id,
-        "role": role,
-        "content": content,
-        "model": model,
-        "tokens_in": tokens_in,
-        "tokens_out": tokens_out,
-        "cost_usd": cost_usd,
-    }).execute()
+    try:
+        db = get_client()
+        db.table("messages").insert({
+            "session_id": session_id,
+            "role": role,
+            "content": content,
+            "model": model,
+            "tokens_in": tokens_in,
+            "tokens_out": tokens_out,
+            "cost_usd": cost_usd,
+        }).execute()
+    except Exception:
+        pass
 
 
 async def save_task_run(
@@ -69,18 +78,21 @@ async def save_task_run(
     tool_calls: int = 0,
     duration_ms: int = 0,
 ) -> None:
-    db = get_client()
-    db.table("task_runs").insert({
-        "session_id": session_id,
-        "user_id": user_id,
-        "model": model,
-        "complexity": complexity,
-        "tokens_in": tokens_in,
-        "tokens_out": tokens_out,
-        "cost_usd": cost_usd,
-        "tool_calls": tool_calls,
-        "duration_ms": duration_ms,
-    }).execute()
+    try:
+        db = get_client()
+        db.table("task_runs").insert({
+            "session_id": session_id,
+            "user_id": user_id,
+            "model": model,
+            "complexity": complexity,
+            "tokens_in": tokens_in,
+            "tokens_out": tokens_out,
+            "cost_usd": cost_usd,
+            "tool_calls": tool_calls,
+            "duration_ms": duration_ms,
+        }).execute()
+    except Exception:
+        pass
 
 
 async def get_sessions(user_id: str, limit: int = 20) -> list[dict]:

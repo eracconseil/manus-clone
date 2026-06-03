@@ -14,7 +14,7 @@ async def get_current_user(authorization: str = Header(default="")) -> dict:
     """
     if not authorization.startswith("Bearer "):
         # Mode dev sans auth
-        return {"id": "dev-user-00000000", "email": "dev@localhost"}
+        return {"id": "00000000-0000-0000-0000-000000000000", "email": "dev@localhost"}
 
     token = authorization.removeprefix("Bearer ").strip()
     try:
