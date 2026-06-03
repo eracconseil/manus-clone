@@ -4,7 +4,6 @@ import { ToolCallCard } from "./ToolCallCard";
 import type { Message, AgentEvent } from "@/lib/types";
 
 function renderMarkdown(text: string): React.ReactNode {
-  // Simple markdown: code blocks, inline code, bold, newlines
   const parts = text.split(/(```[\s\S]*?```|`[^`]+`|\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith("```") && part.endsWith("```")) {
@@ -41,7 +40,7 @@ export function MessageBubble({ message }: { message: Message }) {
       <div className="flex justify-end mb-4">
         <div
           className="max-w-[70%] px-4 py-3 rounded-2xl rounded-tr-sm text-sm leading-relaxed"
-          style={{ background: "#7c6af7", color: "#fff" }}
+          style={{ background: "#0D0D0D", color: "#F8F5EF" }}
         >
           {message.content}
         </div>
@@ -56,20 +55,18 @@ export function MessageBubble({ message }: { message: Message }) {
       {/* Avatar */}
       <div
         className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold mt-0.5"
-        style={{ background: "#1e1e2e", color: "#7c6af7" }}
+        style={{ background: "#0D0D0D", color: "#F8F5EF", fontFamily: "'Georgia', serif" }}
       >
-        M
+        O
       </div>
 
       <div className="flex-1 min-w-0">
-        {/* Model badge */}
         {message.model && (
           <div className="mb-2">
             <ModelBadge model={message.model} />
           </div>
         )}
 
-        {/* Tool calls */}
         {toolGroups.length > 0 && (
           <div className="mb-3">
             {toolGroups.map((g, i) => (
@@ -78,24 +75,22 @@ export function MessageBubble({ message }: { message: Message }) {
           </div>
         )}
 
-        {/* Response text */}
         {message.content && (
           <div
             className={`text-sm leading-relaxed ${message.isStreaming ? "typing-cursor" : ""}`}
-            style={{ color: "#e2e2f0" }}
+            style={{ color: "#0D0D0D" }}
           >
             {renderMarkdown(message.content)}
           </div>
         )}
 
-        {/* Loading state */}
         {message.isStreaming && !message.content && toolGroups.length === 0 && (
           <div className="flex gap-1 mt-1">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
                 className="w-1.5 h-1.5 rounded-full animate-bounce"
-                style={{ background: "#6b6b8a", animationDelay: `${i * 0.15}s` }}
+                style={{ background: "#8a7a6a", animationDelay: `${i * 0.15}s` }}
               />
             ))}
           </div>

@@ -43,28 +43,28 @@ export function ChatInput({ onSend, disabled }: Props) {
     <div className="p-4">
       <div
         className="rounded-2xl border transition-colors"
-        style={{ background: "#111118", borderColor: "#1e1e2e" }}
+        style={{ background: "#ffffff", borderColor: "#e8e0d0" }}
       >
         <textarea
           ref={textareaRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={onKey}
-          placeholder="Donne une tâche à l'agent..."
+          placeholder="Donne une tâche à Orion..."
           disabled={disabled}
           rows={1}
           className="w-full bg-transparent px-4 pt-3 pb-2 text-sm resize-none outline-none leading-relaxed"
-          style={{ color: "#e2e2f0", minHeight: 44 }}
+          style={{ color: "#0D0D0D", minHeight: 44 }}
         />
         <div className="flex items-center justify-between px-3 pb-2">
-          <span className="text-xs" style={{ color: "#6b6b8a" }}>
+          <span className="text-xs" style={{ color: "#8a7a6a" }}>
             Shift+Enter pour nouvelle ligne
           </span>
           <button
             onClick={submit}
             disabled={!value.trim() || disabled}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-40"
-            style={{ background: "#7c6af7", color: "#fff" }}
+            style={{ background: "#0D0D0D", color: "#F8F5EF" }}
           >
             {disabled ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
             Envoyer
@@ -80,7 +80,7 @@ export function ChatInput({ onSend, disabled }: Props) {
             onClick={() => !disabled && onSend(s)}
             disabled={disabled}
             className="text-xs px-3 py-1.5 rounded-full border transition-colors disabled:opacity-40"
-            style={{ borderColor: "#1e1e2e", color: "#6b6b8a", background: "#111118" }}
+            style={{ borderColor: "#e8e0d0", color: "#8a7a6a", background: "#ffffff" }}
           >
             {s.slice(0, 40)}…
           </button>

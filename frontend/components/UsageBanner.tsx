@@ -19,9 +19,9 @@ export function UsageBanner({ profile, onUpgrade }: { profile: Profile; onUpgrad
     <div
       className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm border-b"
       style={{
-        background: isAtLimit ? "#7f1d1d22" : "#78350f22",
-        borderColor: isAtLimit ? "#ef444430" : "#f59e0b30",
-        color: isAtLimit ? "#fca5a5" : "#fcd34d",
+        background: isAtLimit ? "#fdf0ed" : "#fdf8ed",
+        borderColor: isAtLimit ? "#c0392b30" : "#8B691430",
+        color: isAtLimit ? "#c0392b" : "#8B6914",
       }}
     >
       <div className="flex items-center gap-2">
@@ -36,7 +36,7 @@ export function UsageBanner({ profile, onUpgrade }: { profile: Profile; onUpgrad
         <button
           onClick={onUpgrade}
           className="text-xs px-3 py-1 rounded-full font-medium"
-          style={{ background: "#7c6af7", color: "#fff" }}
+          style={{ background: "#0D0D0D", color: "#F8F5EF" }}
         >
           Passer à Pro
         </button>

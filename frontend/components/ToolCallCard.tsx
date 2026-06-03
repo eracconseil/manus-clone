@@ -34,42 +34,45 @@ export function ToolCallCard({ callEvent, resultEvent }: Props) {
   const hasError = resultEvent?.error;
 
   return (
-    <div className="my-1.5 rounded-lg border overflow-hidden text-sm"
-         style={{ borderColor: hasError ? "#ef444440" : "#1e1e2e", background: "#0d0d18" }}>
+    <div
+      className="my-1.5 rounded-lg border overflow-hidden text-sm"
+      style={{ borderColor: hasError ? "#c0392b40" : "#e8e0d0", background: "#f0ece4" }}
+    >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-white/5 transition-colors"
+        className="w-full flex items-center gap-2 px-3 py-2 text-left transition-colors"
+        style={{ background: "transparent" }}
       >
-        <span style={{ color: "#6b6b8a" }}>{icon}</span>
-        <span className="text-xs font-medium" style={{ color: "#a0a0c0" }}>{label}</span>
+        <span style={{ color: "#8B6914" }}>{icon}</span>
+        <span className="text-xs font-medium" style={{ color: "#0D0D0D" }}>{label}</span>
         {callEvent.args && (
-          <span className="text-xs truncate flex-1" style={{ color: "#6b6b8a" }}>
+          <span className="text-xs truncate flex-1" style={{ color: "#8a7a6a" }}>
             {Object.values(callEvent.args)[0]?.toString().slice(0, 60)}
           </span>
         )}
         {resultEvent && (
-          <span className={`text-xs ml-auto ${hasError ? "text-red-400" : "text-emerald-400"}`}>
+          <span className={`text-xs ml-auto font-medium`} style={{ color: hasError ? "#c0392b" : "#2d7a4a" }}>
             {hasError ? "erreur" : "ok"}
           </span>
         )}
-        <span style={{ color: "#6b6b8a" }}>
+        <span style={{ color: "#8a7a6a" }}>
           {open ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
         </span>
       </button>
       {open && (
-        <div className="border-t px-3 py-2 space-y-2" style={{ borderColor: "#1e1e2e" }}>
+        <div className="border-t px-3 py-2 space-y-2" style={{ borderColor: "#e8e0d0" }}>
           {callEvent.args && (
             <div>
-              <div className="text-xs mb-1" style={{ color: "#6b6b8a" }}>Paramètres</div>
-              <pre className="text-xs !p-2 !m-0" style={{ background: "#070710" }}>
+              <div className="text-xs mb-1" style={{ color: "#8a7a6a" }}>Paramètres</div>
+              <pre className="text-xs !p-2 !m-0" style={{ background: "#ede8df" }}>
                 {JSON.stringify(callEvent.args, null, 2)}
               </pre>
             </div>
           )}
           {resultEvent?.result && (
             <div>
-              <div className="text-xs mb-1" style={{ color: "#6b6b8a" }}>Résultat</div>
-              <pre className="text-xs !p-2 !m-0 whitespace-pre-wrap" style={{ background: "#070710" }}>
+              <div className="text-xs mb-1" style={{ color: "#8a7a6a" }}>Résultat</div>
+              <pre className="text-xs !p-2 !m-0 whitespace-pre-wrap" style={{ background: "#ede8df" }}>
                 {resultEvent.result}
               </pre>
             </div>
