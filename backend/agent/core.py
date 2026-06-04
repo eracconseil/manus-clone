@@ -40,15 +40,34 @@ class AgentResult:
     iterations: int = 0
 
 
-SYSTEM_PROMPT = """Tu es Orion, un agent IA autonome expert. Tu peux utiliser des outils pour accomplir des tâches complexes.
+BASE_SYSTEM_PROMPT = """Tu es Orion, un assistant IA autonome de très haute qualité. Tu raisonnes avec logique et rigueur avant de répondre.
 
-Stratégie :
-1. Analyse la demande
-2. Utilise les outils nécessaires (recherche web, code, navigation)
-3. Synthétise une réponse claire et structurée
-4. Cite tes sources quand tu utilises la recherche web
+## Comment tu travailles
+1. **Comprends** exactement ce que l'utilisateur veut (reformule mentalement si nécessaire)
+2. **Réfléchis** étape par étape avant de répondre — ne saute pas aux conclusions
+3. **Utilise tes outils** si tu as besoin d'informations récentes ou de faire des calculs
+4. **Structure** ta réponse clairement : va à l'essentiel, sois précis, utilise des listes ou tableaux si utile
+5. **Vérifie** ta logique avant de répondre — assure-toi que ça tient la route
 
-Sois concis, précis, et toujours utile."""
+## Style de réponse
+- Réponds TOUJOURS dans la langue de l'utilisateur
+- Sois direct et concis — pas de remplissage ni de formules creuses
+- Si tu fais une liste, chaque point doit apporter de la valeur
+- Si c'est une question de raisonnement, montre les étapes
+- Si c'est factuel, sois précis et cite tes sources
+- Si tu ne sais pas quelques chose, dis-le clairement plutôt que d'inventer
+
+## Règles absolues
+- Tu t'appelles **Orion** — ne révèle jamais que tu es Claude, Kimi, GPT ou autre
+- Ne mentionne JAMAIS de plans payants, Pro, premium, abonnement ou mise à niveau
+- Réponds TOUJOURS à la question posée — jamais de refus sans raison valable
+- Tes réponses doivent être cohérentes et logiques du début à la fin"""
+
+
+def build_system_prompt(memory: str = "") -> str:
+    if not memory:
+        return BASE_SYSTEM_PROMPT
+    return BASE_SYSTEM_PROMPT + f"\n\n## Ce que tu sais sur cet utilisateur\n{memory}"
 
 
 class ReActAgent:
@@ -72,6 +91,7 @@ class ReActAgent:
         message: str,
         history: Optional[list[dict]] = None,
         context_length: int = 0,
+        memory: str = "",
     ) -> AsyncIterator[AgentEvent]:
         # 1. Routing
         complexity = await route_task(message, context_length)
@@ -91,13 +111,13 @@ class ReActAgent:
         messages.append({"role": "user", "content": message})
 
         # 3. Mode selon complexité
+        system_prompt = build_system_prompt(memory)
+
         if complexity == TaskComplexity.COMPLEX:
-            # ReAct loop avec tool use (Claude uniquement)
-            async for event in self._react_loop(client, messages, model_label):
+            async for event in self._react_loop(client, messages, model_label, system_prompt):
                 yield event
         else:
-            # Stream direct pour Qwen/Kimi (pas de tool use)
-            async for event in self._simple_stream(client, messages, model_label):
+            async for event in self._simple_stream(client, messages, model_label, system_prompt):
                 yield event
 
         yield AgentEvent("done", {"session_id": session_id})
@@ -107,10 +127,10 @@ class ReActAgent:
         client: BaseLLMClient,
         messages: list[dict],
         model_label: str,
+        system_prompt: str = "",
     ) -> AsyncIterator[AgentEvent]:
-        """Stream direct sans tool use — pour Qwen et Kimi."""
-        # Ajout du system prompt
-        full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
+        """Stream direct sans tool use — pour Haiku et Kimi."""
+        full_messages = [{"role": "system", "content": system_prompt or BASE_SYSTEM_PROMPT}] + messages
 
         async for chunk in client.stream(full_messages):
             if not chunk.done:
@@ -121,9 +141,10 @@ class ReActAgent:
         client: BaseLLMClient,
         messages: list[dict],
         model_label: str,
+        system_prompt: str = "",
     ) -> AsyncIterator[AgentEvent]:
         """ReAct loop complet avec tool use — pour Claude."""
-        full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
+        full_messages = [{"role": "system", "content": system_prompt or BASE_SYSTEM_PROMPT}] + messages
         iterations = 0
 
         while iterations < MAX_ITERATIONS:
