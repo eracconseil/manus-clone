@@ -1,6 +1,6 @@
 """
 ReAct Agent Core — Reason + Act loop
-Supporte : Qwen (simple), Kimi (long context), Claude (complex avec tools)
+Supporte : Haiku (simple), Kimi (long context), Claude Sonnet (complex avec tools)
 """
 import json
 import logging
@@ -9,8 +9,8 @@ from typing import AsyncIterator, Optional
 
 from ..llm import BaseLLMClient, StreamChunk
 from ..llm.claude import ClaudeClient
+from ..llm.haiku import HaikuClient
 from ..llm.kimi import KimiClient
-from ..llm.qwen import QwenClient
 from ..models.schemas import TaskComplexity
 from .router import route_task
 from .tools import TOOL_DEFINITIONS, execute_tool
@@ -56,12 +56,12 @@ class ReActAgent:
 
     def __init__(self):
         self._clients: dict[TaskComplexity, BaseLLMClient] = {
-            TaskComplexity.SIMPLE: QwenClient(),
+            TaskComplexity.SIMPLE: HaikuClient(),
             TaskComplexity.LONG_CONTEXT: KimiClient(),
             TaskComplexity.COMPLEX: ClaudeClient(),
         }
         self._model_labels = {
-            TaskComplexity.SIMPLE: "qwen",
+            TaskComplexity.SIMPLE: "haiku",
             TaskComplexity.LONG_CONTEXT: "kimi",
             TaskComplexity.COMPLEX: "claude",
         }

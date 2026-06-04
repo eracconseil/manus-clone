@@ -1,20 +1,20 @@
 "use client";
 import type { ModelType } from "@/lib/types";
 
-const CONFIG: Record<ModelType, { label: string; color: string; dot: string }> = {
-  qwen:   { label: "Qwen 3.5",   color: "#10b981", dot: "bg-emerald-400" },
-  kimi:   { label: "Kimi K2",    color: "#3b82f6", dot: "bg-blue-400" },
-  claude: { label: "Claude Sonnet", color: "#f59e0b", dot: "bg-amber-400" },
+const CONFIG: Record<ModelType, { label: string; color: string }> = {
+  haiku:  { label: "Haiku · rapide",    color: "#2d7a4a" },
+  kimi:   { label: "Kimi K2 · long",    color: "#1a4a8a" },
+  claude: { label: "Claude · complexe", color: "#8B6914" },
 };
 
 export function ModelBadge({ model }: { model: ModelType }) {
-  const cfg = CONFIG[model];
+  const cfg = CONFIG[model] ?? CONFIG.haiku;
   return (
     <span
       className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium border"
-      style={{ borderColor: cfg.color + "40", color: cfg.color, background: cfg.color + "14" }}
+      style={{ borderColor: cfg.color + "30", color: cfg.color, background: cfg.color + "10" }}
     >
-      <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+      <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: cfg.color }} />
       {cfg.label}
     </span>
   );

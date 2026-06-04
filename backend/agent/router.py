@@ -1,32 +1,40 @@
-from ..llm.qwen import QwenClient
 from ..models.schemas import TaskComplexity
 
-_qwen = QwenClient()
+COMPLEX_KEYWORDS = {
+    "recherche", "search", "web", "trouve", "find", "analyse", "plan", "code",
+    "script", "programme", "crée", "génère", "génère", "generate", "create",
+    "rapport", "report", "compare", "évalue", "evaluate", "stratégie", "strategy",
+    "implémente", "implement", "développe", "develop", "debug", "corrige",
+    "calcule", "simulate", "scrape", "télécharge", "download", "fichier", "file",
+    "execute", "exécute", "run", "teste", "test",
+}
 
-SYSTEM_PROMPT = """Tu es un classificateur de tâches. Analyse la tâche et réponds UNIQUEMENT par un seul mot :
-- SIMPLE : résumé court, extraction de données, classification, traduction, reformulation
-- LONG_CONTEXT : analyse de PDF ou document long, contexte > 8000 tokens
-- COMPLEX : planification multi-étapes, raisonnement, recherche web, génération de code, décisions
-
-Réponds uniquement par : SIMPLE, LONG_CONTEXT ou COMPLEX"""
+SIMPLE_KEYWORDS = {
+    "bonjour", "hello", "salut", "hi", "merci", "thanks", "ok", "oui", "non",
+    "traduis", "translate", "résume", "summarize", "explique", "explain",
+    "définis", "define", "qu'est-ce", "what is", "c'est quoi", "dis-moi",
+    "reformule", "rephrase", "liste", "list",
+}
 
 
 async def route_task(task: str, context_length: int = 0) -> TaskComplexity:
-    # Long contexte détecté directement par la taille
     if context_length > 8000:
         return TaskComplexity.LONG_CONTEXT
 
-    response = await _qwen.complete(
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": task},
-        ]
-    )
+    task_lower = task.lower()
+    word_count = len(task.split())
 
-    label = response.content.strip().upper()
-
-    if label == "SIMPLE":
-        return TaskComplexity.SIMPLE
-    if label == "LONG_CONTEXT":
+    # Long context if message itself is very long
+    if word_count > 300:
         return TaskComplexity.LONG_CONTEXT
+
+    # Complex if contains complex keywords
+    if any(kw in task_lower for kw in COMPLEX_KEYWORDS):
+        return TaskComplexity.COMPLEX
+
+    # Simple for short greetings / definitions / translations
+    if word_count <= 15 or any(kw in task_lower for kw in SIMPLE_KEYWORDS):
+        return TaskComplexity.SIMPLE
+
+    # Default: complex (safer, more capable)
     return TaskComplexity.COMPLEX

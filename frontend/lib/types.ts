@@ -1,4 +1,4 @@
-export type ModelType = "qwen" | "kimi" | "claude";
+export type ModelType = "haiku" | "kimi" | "claude";
 export type ComplexityType = "simple" | "long_context" | "complex";
 export type EventType =
   | "routing"

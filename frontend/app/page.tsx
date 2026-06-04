@@ -73,7 +73,7 @@ export default function Home() {
         <div className="flex items-center gap-4">
           {/* Model legend */}
           <div className="hidden sm:flex items-center gap-4 text-xs" style={{ color: "#8a7a6a" }}>
-            <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#2d7a4a" }} />Qwen · simple</span>
+            <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#2d7a4a" }} />Haiku · simple</span>
             <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#1a4a8a" }} />Kimi · long</span>
             <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#8B6914" }} />Claude · complexe</span>
           </div>
