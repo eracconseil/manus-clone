@@ -36,5 +36,5 @@ async def route_task(task: str, context_length: int = 0) -> TaskComplexity:
     if word_count <= 15 or any(kw in task_lower for kw in SIMPLE_KEYWORDS):
         return TaskComplexity.SIMPLE
 
-    # Default: simple (fast)
-    return TaskComplexity.SIMPLE
+    # Default: complex
+    return TaskComplexity.COMPLEX
