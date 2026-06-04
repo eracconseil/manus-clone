@@ -3,7 +3,7 @@ from typing import AsyncIterator, Optional
 from . import BaseLLMClient, LLMResponse, StreamChunk
 from ..config import settings
 
-MODEL = "claude-3-5-haiku-20241022"
+MODEL = "claude-haiku-4-5-20251001"
 
 COST_INPUT_PER_TOKEN = 0.80 / 1_000_000
 COST_OUTPUT_PER_TOKEN = 4.00 / 1_000_000
