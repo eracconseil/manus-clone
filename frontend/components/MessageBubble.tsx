@@ -1,24 +1,9 @@
 "use client";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { ModelBadge } from "./ModelBadge";
 import { ToolCallCard } from "./ToolCallCard";
 import type { Message, AgentEvent } from "@/lib/types";
-
-function renderMarkdown(text: string): React.ReactNode {
-  const parts = text.split(/(```[\s\S]*?```|`[^`]+`|\*\*[^*]+\*\*)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith("```") && part.endsWith("```")) {
-      const code = part.slice(3, -3).replace(/^\w+\n/, "");
-      return <pre key={i}><code>{code}</code></pre>;
-    }
-    if (part.startsWith("`") && part.endsWith("`")) {
-      return <code key={i}>{part.slice(1, -1)}</code>;
-    }
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>;
-    }
-    return <span key={i}>{part}</span>;
-  });
-}
 
 function groupToolEvents(events: AgentEvent[]) {
   const groups: Array<{ call: AgentEvent; result?: AgentEvent }> = [];
@@ -31,6 +16,61 @@ function groupToolEvents(events: AgentEvent[]) {
   }
   return groups;
 }
+
+const mdComponents = {
+  h1: ({ children }: any) => (
+    <h1 style={{ fontSize: 18, fontWeight: 700, color: "#0D0D0D", margin: "16px 0 8px", fontFamily: "'Georgia', serif", borderBottom: "1px solid #e8e0d0", paddingBottom: 6 }}>{children}</h1>
+  ),
+  h2: ({ children }: any) => (
+    <h2 style={{ fontSize: 15, fontWeight: 700, color: "#0D0D0D", margin: "14px 0 6px", fontFamily: "'Georgia', serif" }}>{children}</h2>
+  ),
+  h3: ({ children }: any) => (
+    <h3 style={{ fontSize: 13, fontWeight: 600, color: "#2a1a0a", margin: "10px 0 4px" }}>{children}</h3>
+  ),
+  p: ({ children }: any) => (
+    <p style={{ margin: "6px 0", lineHeight: 1.7, color: "#0D0D0D" }}>{children}</p>
+  ),
+  ul: ({ children }: any) => (
+    <ul style={{ margin: "6px 0", paddingLeft: 20, listStyleType: "disc" }}>{children}</ul>
+  ),
+  ol: ({ children }: any) => (
+    <ol style={{ margin: "6px 0", paddingLeft: 20 }}>{children}</ol>
+  ),
+  li: ({ children }: any) => (
+    <li style={{ margin: "3px 0", lineHeight: 1.6, color: "#0D0D0D" }}>{children}</li>
+  ),
+  strong: ({ children }: any) => (
+    <strong style={{ fontWeight: 700, color: "#0D0D0D" }}>{children}</strong>
+  ),
+  em: ({ children }: any) => (
+    <em style={{ fontStyle: "italic", color: "#4a3a2a" }}>{children}</em>
+  ),
+  code: ({ inline, children }: any) =>
+    inline ? (
+      <code style={{ background: "#ede8df", border: "1px solid #e8e0d0", borderRadius: 4, padding: "1px 5px", fontSize: 12, fontFamily: "monospace", color: "#8B6914" }}>{children}</code>
+    ) : (
+      <pre style={{ background: "#f0ece4", border: "1px solid #e8e0d0", borderRadius: 8, padding: "10px 14px", overflowX: "auto", margin: "8px 0" }}>
+        <code style={{ fontSize: 12, fontFamily: "monospace", color: "#2a1a0a" }}>{children}</code>
+      </pre>
+    ),
+  blockquote: ({ children }: any) => (
+    <blockquote style={{ borderLeft: "3px solid #8B6914", margin: "8px 0", paddingLeft: 12, color: "#6a5a4a", fontStyle: "italic" }}>{children}</blockquote>
+  ),
+  hr: () => (
+    <hr style={{ border: "none", borderTop: "1px solid #e8e0d0", margin: "12px 0" }} />
+  ),
+  table: ({ children }: any) => (
+    <div style={{ overflowX: "auto", margin: "8px 0" }}>
+      <table style={{ borderCollapse: "collapse", width: "100%", fontSize: 13 }}>{children}</table>
+    </div>
+  ),
+  th: ({ children }: any) => (
+    <th style={{ border: "1px solid #e8e0d0", padding: "6px 10px", background: "#f0ece4", fontWeight: 600, textAlign: "left", color: "#0D0D0D" }}>{children}</th>
+  ),
+  td: ({ children }: any) => (
+    <td style={{ border: "1px solid #e8e0d0", padding: "5px 10px", color: "#0D0D0D" }}>{children}</td>
+  ),
+};
 
 export function MessageBubble({ message }: { message: Message }) {
   const isUser = message.role === "user";
@@ -76,11 +116,13 @@ export function MessageBubble({ message }: { message: Message }) {
         )}
 
         {message.content && (
-          <div
-            className={`text-sm leading-relaxed ${message.isStreaming ? "typing-cursor" : ""}`}
-            style={{ color: "#0D0D0D" }}
-          >
-            {renderMarkdown(message.content)}
+          <div className={`text-sm ${message.isStreaming ? "typing-cursor" : ""}`}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={mdComponents as any}
+            >
+              {message.content}
+            </ReactMarkdown>
           </div>
         )}
 
