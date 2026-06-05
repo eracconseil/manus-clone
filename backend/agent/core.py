@@ -17,7 +17,7 @@ from .tools import TOOL_DEFINITIONS, execute_tool
 
 logger = logging.getLogger(__name__)
 
-MAX_ITERATIONS = 5  # Limité pour contrôler les coûts tout en restant efficace
+MAX_ITERATIONS = 10  # Suffisant pour recherche + réponse sans bloquer
 
 
 @dataclass
@@ -60,6 +60,12 @@ Nous sommes en **2026**. Toutes tes réponses doivent tenir compte de cette date
 - Tout ce qui peut avoir changé depuis 2024
 - Météo, résultats sportifs, élections
 - Lois, réglementations récentes
+
+## Stratégie d'utilisation des outils (IMPORTANT)
+- **1 ou 2 web_search suffisent** pour la plupart des questions — ne fais pas 5 recherches
+- **N'utilise PAS browser_navigate** sauf si tu as absolument besoin du contenu complet d'une page spécifique
+- Les snippets de recherche suffisent pour répondre — exploite-les directement
+- **Après 2 recherches maximum → rédige ta réponse** sans naviguer vers les sites
 
 ## Style de réponse
 - Réponds TOUJOURS dans la langue de l'utilisateur
