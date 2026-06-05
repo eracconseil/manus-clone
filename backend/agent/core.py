@@ -208,15 +208,18 @@ class ReActAgent:
             # Tool calls — format Anthropic : liste de ContentBlock avec type="tool_use"
             tool_calls = response.tool_calls or []
             if not tool_calls:
-                # Fin de la boucle — stream la réponse finale mot par mot
+                # Fin de la boucle — stream la réponse finale
                 if response.content:
+                    # Streamer mot par mot pour l'effet temps réel
                     words = response.content.split(" ")
                     for i, word in enumerate(words):
                         sep = " " if i < len(words) - 1 else ""
-                        yield AgentEvent("response", {
-                            "content": word + sep,
-                            "model": model_label,
-                        })
+                        yield AgentEvent("response", {"content": word + sep, "model": model_label})
+                else:
+                    # Réponse vide — faire un appel stream direct
+                    async for chunk in client.stream(full_messages):
+                        if not chunk.done and chunk.content:
+                            yield AgentEvent("response", {"content": chunk.content, "model": model_label})
                 return
 
             # Construit le message assistant avec les tool_use blocks (format Anthropic)
