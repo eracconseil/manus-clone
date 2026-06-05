@@ -8,6 +8,9 @@ COMPLEX_KEYWORDS = {
     "plan", "rapport", "rédige", "écris un", "crée", "génère",
     "calcule", "résous", "explique en détail", "approfondi",
     "investissement", "finance", "juridique", "médical", "scientifique",
+    # Image generation
+    "image", "photo", "illustration", "dessin", "dessine", "génère une image",
+    "generate image", "picture", "visuel", "logo", "affiche", "poster",
 }
 
 
