@@ -7,7 +7,7 @@ BRAVE_API_URL = "https://api.search.brave.com/res/v1/web/search"
 DDG_API_URL = "https://api.duckduckgo.com/"
 
 
-async def web_search(query: str, count: int = 5) -> str:
+async def web_search(query: str, count: int = 8) -> str:
     from ..config_tools import get_brave_key
     api_key = get_brave_key()
 
@@ -36,7 +36,15 @@ async def _brave_search(query: str, count: int, api_key: str) -> str:
             title = r.get("title", "")
             url = r.get("url", "")
             desc = r.get("description", "")
-            lines.append(f"**{title}**\n{url}\n{desc}")
+            age = r.get("age", "")
+            extra = r.get("extra_snippets", [])
+            entry = f"**{title}**\n{url}"
+            if age:
+                entry += f" [{age}]"
+            entry += f"\n{desc}"
+            if extra:
+                entry += "\n" + " | ".join(extra[:2])
+            lines.append(entry)
         return "\n\n".join(lines)
     except Exception:
         return await _ddg_search(query, count)
