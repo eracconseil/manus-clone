@@ -11,9 +11,9 @@ PLAN_PRICE_IDS = {
 }
 
 PLAN_LIMITS = {
-    "free":     10,
-    "pro":      150,
-    "business": 600,
+    "free":     25,
+    "pro":      200,
+    "business": 1000,
 }
 
 
