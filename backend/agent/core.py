@@ -92,9 +92,13 @@ class ReActAgent:
         history: Optional[list[dict]] = None,
         context_length: int = 0,
         memory: str = "",
+        images: list = None,
     ) -> AsyncIterator[AgentEvent]:
-        # 1. Routing
-        complexity = await route_task(message, context_length)
+        # 1. Routing — si images jointes, forcer Sonnet (vision)
+        if images:
+            complexity = TaskComplexity.COMPLEX
+        else:
+            complexity = await route_task(message, context_length)
         model_label = self._model_labels[complexity]
         client = self._clients[complexity]
 
@@ -108,7 +112,30 @@ class ReActAgent:
         messages = []
         if history:
             messages.extend(history)
-        messages.append({"role": "user", "content": message})
+
+        # Message utilisateur — avec images si présentes
+        if images:
+            content = []
+            for img in images:
+                # Extraire le base64 pur (sans le préfixe data:image/...;base64,)
+                data = img.data
+                if "," in data:
+                    data = data.split(",", 1)[1]
+                content.append({
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": img.media_type,
+                        "data": data,
+                    }
+                })
+            if message:
+                content.append({"type": "text", "text": message})
+            else:
+                content.append({"type": "text", "text": "Analyse cette image et décris ce que tu vois en détail."})
+            messages.append({"role": "user", "content": content})
+        else:
+            messages.append({"role": "user", "content": message})
 
         # 3. Mode selon complexité
         system_prompt = build_system_prompt(memory)

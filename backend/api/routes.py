@@ -14,7 +14,7 @@ _agent = ReActAgent()
 
 ANON_USER_ID = "00000000-0000-0000-0000-000000000000"
 
-async def event_stream(session_id: str, message: str, user_id: str):
+async def event_stream(session_id: str, message: str, user_id: str, images: list = None):
     start = time.monotonic()
     tool_count = 0
     final_model = "haiku"
@@ -43,7 +43,7 @@ async def event_stream(session_id: str, message: str, user_id: str):
     context_length = sum(len(m["content"]) for m in history)
     full_response = ""
 
-    async for event in _agent.run(session_id, message, history=history, context_length=context_length, memory=memory):
+    async for event in _agent.run(session_id, message, history=history, context_length=context_length, memory=memory, images=images or []):
         sse = event.to_sse()
         yield sse
 
@@ -85,7 +85,7 @@ async def run_agent(request: RunRequest, user: dict = Depends(get_current_user))
             return StreamingResponse(quota_exceeded(), media_type="text/event-stream")
 
     return StreamingResponse(
-        event_stream(request.session_id, request.message, user["id"]),
+        event_stream(request.session_id, request.message, user["id"], request.images),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )

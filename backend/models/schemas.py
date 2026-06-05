@@ -15,9 +15,16 @@ class TaskComplexity(str, Enum):
     COMPLEX = "complex"
 
 
+class ImageAttachment(BaseModel):
+    data: str        # base64
+    media_type: str  # image/jpeg, image/png, etc.
+    name: str
+
+
 class RunRequest(BaseModel):
     session_id: str
     message: str
+    images: Optional[list[ImageAttachment]] = None
 
 
 class SubscriptionStatus(BaseModel):
